@@ -26,7 +26,7 @@ resource "aws_iam_role_policy_attachment" "node_ecr_policy" {
   role       = aws_iam_role.node_group.name
 }
 
-# Launch Template — EC2 instance కి Name + Role tags పెట్టడానికి
+# Launch Template — EC2 instance ki Name + Role tags pettadaniki
 resource "aws_launch_template" "worker" {
   name = "${var.cluster_name}-worker-template"
 
