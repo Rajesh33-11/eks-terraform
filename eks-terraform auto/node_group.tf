@@ -1,7 +1,6 @@
 # Worker Nodes IAM Role
 resource "aws_iam_role" "node_group" {
   name = "${var.cluster_name}-node-role"
-
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -27,6 +26,20 @@ resource "aws_iam_role_policy_attachment" "node_ecr_policy" {
   role       = aws_iam_role.node_group.name
 }
 
+# Launch Template — EC2 instance కి Name + Role tags పెట్టడానికి
+resource "aws_launch_template" "worker" {
+  name = "${var.cluster_name}-worker-template"
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name    = "${var.cluster_name}-worker-node"
+      Role    = "worker"
+      Cluster = var.cluster_name
+    }
+  }
+}
+
 # EKS Node Group (Worker Nodes)
 resource "aws_eks_node_group" "main" {
   cluster_name    = aws_eks_cluster.main.name
@@ -34,6 +47,12 @@ resource "aws_eks_node_group" "main" {
   node_role_arn   = aws_iam_role.node_group.arn
   subnet_ids      = aws_subnet.private[*].id
   instance_types  = [var.node_instance_type]
+
+  # ← ఇది add చేశాం — EC2 కి automatic name వస్తుంది
+  launch_template {
+    name    = aws_launch_template.worker.name
+    version = aws_launch_template.worker.latest_version
+  }
 
   scaling_config {
     desired_size = var.desired_nodes
