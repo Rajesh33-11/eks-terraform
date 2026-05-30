@@ -1,4 +1,4 @@
-# Available AZs fetch చేయి
+# Available AZs fetch cheyyi
 data "aws_availability_zones" "available" {
   state = "available"
 }
@@ -37,7 +37,7 @@ resource "aws_subnet" "public" {
   }
 }
 
-# Private Subnets (Worker nodes ఇక్కడ run అవుతాయి)
+# Private Subnets (Worker nodes eekada run avuthaiii)
 resource "aws_subnet" "private" {
   count             = 2
   vpc_id            = aws_vpc.main.id
@@ -60,7 +60,7 @@ resource "aws_eip" "nat" {
   }
 }
 
-# NAT Gateway (private subnets internet కి వెళ్ళడానికి)
+# NAT Gateway (private subnets internet ki velladaniki)
 resource "aws_nat_gateway" "main" {
   allocation_id = aws_eip.nat.id
   subnet_id     = aws_subnet.public[0].id
