@@ -48,7 +48,7 @@ resource "aws_eks_node_group" "main" {
   subnet_ids      = aws_subnet.private[*].id
   instance_types  = [var.node_instance_type]
 
-  # ← ఇది add చేశాం — EC2 కి automatic name వస్తుంది
+  # EC2 ki automatic name vasthundhii
   launch_template {
     name    = aws_launch_template.worker.name
     version = aws_launch_template.worker.latest_version
