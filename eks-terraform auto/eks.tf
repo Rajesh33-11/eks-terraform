@@ -39,7 +39,7 @@ resource "aws_eks_cluster" "main" {
 }
 
 # kubectl install + kubeconfig setup
-# EKS cluster ready అయిన వెంటనే run అవుతుంది
+# EKS cluster ready iiena ventanee run avuthundhiii 
 resource "null_resource" "kubectl_setup" {
   depends_on = [aws_eks_cluster.main]
 
@@ -54,7 +54,7 @@ resource "null_resource" "kubectl_setup" {
       set -e
 
       echo "========================================"
-      echo " Step 1: kubectl install చేస్తున్నాం"
+      echo " Step 1: kubectl install chesthunam"
       echo "========================================"
 
       if command -v kubectl &>/dev/null; then
@@ -79,7 +79,7 @@ resource "null_resource" "kubectl_setup" {
 
       echo ""
       echo "========================================"
-      echo " Step 2: kubeconfig update చేస్తున్నాం"
+      echo " Step 2: kubeconfig update chesthunam"
       echo "========================================"
       aws eks update-kubeconfig \
         --region ${var.region} \
