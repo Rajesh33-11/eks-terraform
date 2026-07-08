@@ -2,8 +2,8 @@
 set -e
 
 echo "=================================================="
-echo "  Terraform + AWS CLI + Git Installer"
-echo "  Ubuntu 24.04 LTS (EC2)"
+echo "  Terraform + AWS CLI + Git + kubectl Installer"
+echo "  Ubuntu 24.04 / 26.04 LTS (EC2)"
 echo "=================================================="
 
 # Colors
@@ -54,7 +54,21 @@ rm -f terraform.zip
 
 ok "Terraform installed: $(terraform version | head -1)"
 
-# ── 5. Set Default AWS Region ────────────────────────────
+# ── 5. Install kubectl ───────────────────────────────────
+info "Latest stable kubectl install chesthunam..."
+
+KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
+
+curl -LO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
+
+rm -f kubectl
+
+ok "kubectl installed: $(kubectl version --client)"
+
+# ── 6. Set Default AWS Region ────────────────────────────
 info "AWS default region set chesthunam..."
 
 BASHRC="$HOME/.bashrc"
@@ -68,7 +82,7 @@ EOF
 
 ok "AWS_DEFAULT_REGION added to ~/.bashrc"
 
-# ── 6. Summary ───────────────────────────────────────────
+# ── 7. Summary ───────────────────────────────────────────
 echo ""
 echo "=================================================="
 echo -e "${GREEN} Installation Completed Successfully!${NC}"
@@ -78,6 +92,7 @@ echo "Installed Versions:"
 echo "  Git        : $(git --version)"
 echo "  AWS CLI    : $(aws --version | cut -d' ' -f1)"
 echo "  Terraform  : $(terraform version | head -1)"
+echo "  kubectl    : $(kubectl version --client)"
 echo ""
 echo "=================================================="
 echo " NEXT STEPS"
@@ -95,7 +110,13 @@ echo ""
 echo "4. Verify Terraform:"
 echo "   terraform version"
 echo ""
-echo "5. Verify Git:"
-echo "   git --version"
+echo "5. Verify kubectl:"
+echo "   kubectl version --client"
+echo ""
+echo "6. Configure EKS kubeconfig (After Cluster Creation):"
+echo "   aws eks update-kubeconfig --region ap-south-1 --name <cluster-name>"
+echo ""
+echo "7. Verify EKS Nodes:"
+echo "   kubectl get nodes"
 echo ""
 echo "=================================================="
